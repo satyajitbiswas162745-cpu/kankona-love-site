@@ -13,10 +13,23 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    overflow:hidden;
     text-align:center;
+    overflow:hidden;
+}
+.startScreen{
+    color:white;
+}
+.startBtn{
+    padding:15px 35px;
+    font-size:20px;
+    border:none;
+    border-radius:30px;
+    background:#ff4b6e;
+    color:white;
+    cursor:pointer;
 }
 .card{
+    display:none;
     background:white;
     padding:30px;
     border-radius:25px;
@@ -25,33 +38,27 @@ body{
     position:relative;
 }
 .name{font-weight:bold;font-size:26px;color:#ff2e63;}
-button{
-    margin:15px;
-    padding:12px 25px;
-    border:none;
-    border-radius:25px;
-    font-size:16px;
-    cursor:pointer;
-}
+button{margin:15px;padding:12px 25px;border:none;border-radius:25px;font-size:16px;cursor:pointer;}
 .yes{background:#ff4b6e;color:white;}
-.no{background:#eee; position:absolute;}
-.slideshow img{
-    width:100%;
-    height:220px;
-    object-fit:cover;
-    border-radius:15px;
-}
+.no{background:#eee;position:absolute;}
+.slideshow img{width:100%;height:220px;object-fit:cover;border-radius:15px;}
 </style>
 </head>
 
 <body>
 
-<!-- MUSIC -->
 <audio id="bgMusic" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
-<div class="card">
+<!-- START SCREEN -->
+<div class="startScreen" id="startScreen">
+  <h1>Tap to open ❤️</h1>
+  <button class="startBtn" onclick="startSite()">Start</button>
+</div>
+
+<!-- MAIN CARD -->
+<div class="card" id="mainCard">
 
 <div class="slideshow">
     <img src="photo1.jpg" id="slide">
@@ -73,84 +80,46 @@ I <b>Satyajit</b> want to stay with you forever 💍
 </div>
 
 <script>
-/* PLAY MUSIC AFTER FIRST CLICK */
-document.addEventListener("click", function(){
-  document.getElementById("bgMusic").play();
-}, { once:true });
+function startSite(){
+ document.getElementById("bgMusic").play();
+ document.getElementById("startScreen").style.display="none";
+ document.getElementById("mainCard").style.display="block";
+}
 
 /* slideshow */
 let images=["photo1.jpg","photo2.jpg"];
 let i=0;
 setInterval(()=>{
-  i=(i+1)%images.length;
-  document.getElementById("slide").src=images[i];
+  let slide=document.getElementById("slide");
+  if(slide){
+    i=(i+1)%images.length;
+    slide.src=images[i];
+  }
 },2500);
 
-/* falling hearts animation */
-function createHeart(){
- const heart=document.createElement("div");
- heart.innerHTML="💖";
- heart.style.position="fixed";
- heart.style.left=Math.random()*100+"vw";
- heart.style.top="-10px";
- heart.style.fontSize="25px";
- heart.style.animation="fall 4s linear forwards";
- document.body.appendChild(heart);
- setTimeout(()=>heart.remove(),4000);
-}
-setInterval(createHeart,300);
-
-/* YES CLICK FINAL SCREEN */
+/* YES SCREEN */
 function yesClick(){
  document.body.innerHTML=`
+ <style>
+ body{
+  background:linear-gradient(135deg,#ff4b6e,#ff9a9e);
+  display:flex;justify-content:center;align-items:center;height:100vh;margin:0;
+  font-family:'Times New Roman',serif;color:white;text-align:center;
+ }
+ .loveBox{
+  border:6px solid #fff;border-radius:30px;padding:40px;max-width:650px;
+  box-shadow:0 0 40px rgba(255,255,255,0.5);position:relative;
+ }
+ .loveBox:before,.loveBox:after{
+  content:"❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️";
+  position:absolute;font-size:22px;width:100%;left:0;
+ }
+ .loveBox:before{top:-35px;} .loveBox:after{bottom:-35px;}
+ .bigText{font-weight:bold;font-size:22px;line-height:1.7;}
+ </style>
 
-<style>
-@keyframes fall{
- from{transform:translateY(-10px);}
- to{transform:translateY(100vh);}
-}
-body{
- background: linear-gradient(135deg,#ff4b6e,#ff9a9e);
- display:flex;
- justify-content:center;
- align-items:center;
- height:100vh;
- margin:0;
- font-family:'Times New Roman',serif;
- color:white;
- text-align:center;
-}
-
-.loveBox{
- border:6px solid #fff;
- border-radius:30px;
- padding:40px;
- max-width:650px;
- box-shadow:0 0 40px rgba(255,255,255,0.5);
- position:relative;
-}
-
-.loveBox:before, .loveBox:after{
- content:"❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️";
- position:absolute;
- font-size:22px;
- width:100%;
- left:0;
-}
-
-.loveBox:before{ top:-35px; }
-.loveBox:after{ bottom:-35px; }
-
-.bigText{
- font-weight:bold;
- font-size:22px;
- line-height:1.7;
-}
-</style>
-
-<div class="loveBox">
+ <div class="loveBox">
  <h1>Kankona ❤️ Satyajit Forever 💍</h1>
-
  <p class="bigText">
  I promise to always choose you, every single day.<br><br>
  I promise to stand beside you in your bad days and celebrate your good days like they are my own.<br><br>
@@ -158,16 +127,19 @@ body{
  No matter what life brings, I’ll hold your hand and walk through everything with you.<br><br>
  I LOVE YOU KANKONA ❤️
  </p>
-</div>
-`;
+ </div>`;
 }
 
 /* moving NO button */
-const noBtn=document.getElementById("noBtn");
-noBtn.addEventListener("mouseover",()=>{
- noBtn.style.top=Math.random()*70+"%";
- noBtn.style.left=Math.random()*70+"%";
-});
+setTimeout(()=>{
+ const noBtn=document.getElementById("noBtn");
+ if(noBtn){
+  noBtn.addEventListener("mouseover",()=>{
+   noBtn.style.top=Math.random()*70+"%";
+   noBtn.style.left=Math.random()*70+"%";
+  });
+ }
+},500);
 </script>
 
 </body>
