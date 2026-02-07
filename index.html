@@ -46,7 +46,8 @@ button{
 
 <body>
 
-<audio autoplay loop>
+<!-- MUSIC -->
+<audio id="bgMusic" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
@@ -72,6 +73,11 @@ I <b>Satyajit</b> want to stay with you forever 💍
 </div>
 
 <script>
+/* PLAY MUSIC AFTER FIRST CLICK */
+document.addEventListener("click", function(){
+  document.getElementById("bgMusic").play();
+}, { once:true });
+
 /* slideshow */
 let images=["photo1.jpg","photo2.jpg"];
 let i=0;
@@ -80,7 +86,7 @@ setInterval(()=>{
   document.getElementById("slide").src=images[i];
 },2500);
 
-/* confetti hearts */
+/* falling hearts animation */
 function createHeart(){
  const heart=document.createElement("div");
  heart.innerHTML="💖";
@@ -92,7 +98,6 @@ function createHeart(){
  document.body.appendChild(heart);
  setTimeout(()=>heart.remove(),4000);
 }
-
 setInterval(createHeart,300);
 
 /* YES CLICK FINAL SCREEN */
