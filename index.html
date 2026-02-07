@@ -22,6 +22,7 @@ body{
     border-radius:25px;
     box-shadow:0 10px 40px rgba(0,0,0,0.25);
     width:380px;
+    position:relative;
 }
 .name{font-weight:bold;font-size:26px;color:#ff2e63;}
 button{
@@ -33,7 +34,7 @@ button{
     cursor:pointer;
 }
 .yes{background:#ff4b6e;color:white;}
-.no{background:#eee;position:absolute;}
+.no{background:#eee; position:absolute;}
 .slideshow img{
     width:100%;
     height:220px;
@@ -71,6 +72,7 @@ I <b>Satyajit</b> want to stay with you forever 💍
 </div>
 
 <script>
+/* slideshow */
 let images=["photo1.jpg","photo2.jpg"];
 let i=0;
 setInterval(()=>{
@@ -78,24 +80,88 @@ setInterval(()=>{
   document.getElementById("slide").src=images[i];
 },2500);
 
+/* confetti hearts */
+function createHeart(){
+ const heart=document.createElement("div");
+ heart.innerHTML="💖";
+ heart.style.position="fixed";
+ heart.style.left=Math.random()*100+"vw";
+ heart.style.top="-10px";
+ heart.style.fontSize="25px";
+ heart.style.animation="fall 4s linear forwards";
+ document.body.appendChild(heart);
+ setTimeout(()=>heart.remove(),4000);
+}
+
+setInterval(createHeart,300);
+
+/* YES CLICK FINAL SCREEN */
 function yesClick(){
  document.body.innerHTML=`
- <div style="padding:40px;color:white">
+
+<style>
+@keyframes fall{
+ from{transform:translateY(-10px);}
+ to{transform:translateY(100vh);}
+}
+body{
+ background: linear-gradient(135deg,#ff4b6e,#ff9a9e);
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ height:100vh;
+ margin:0;
+ font-family:'Times New Roman',serif;
+ color:white;
+ text-align:center;
+}
+
+.loveBox{
+ border:6px solid #fff;
+ border-radius:30px;
+ padding:40px;
+ max-width:650px;
+ box-shadow:0 0 40px rgba(255,255,255,0.5);
+ position:relative;
+}
+
+.loveBox:before, .loveBox:after{
+ content:"❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️";
+ position:absolute;
+ font-size:22px;
+ width:100%;
+ left:0;
+}
+
+.loveBox:before{ top:-35px; }
+.loveBox:after{ bottom:-35px; }
+
+.bigText{
+ font-weight:bold;
+ font-size:22px;
+ line-height:1.7;
+}
+</style>
+
+<div class="loveBox">
  <h1>Kankona ❤️ Satyajit Forever 💍</h1>
- <p style="font-size:20px;max-width:600px;margin:auto">
+
+ <p class="bigText">
  I promise to always choose you, every single day.<br><br>
  I promise to stand beside you in your bad days and celebrate your good days like they are my own.<br><br>
  I promise to respect you, support your dreams, and never stop making you smile.<br><br>
  No matter what life brings, I’ll hold your hand and walk through everything with you.<br><br>
- I love you, Kankona ❤️
+ I LOVE YOU KANKONA ❤️
  </p>
- </div>`;
+</div>
+`;
 }
 
+/* moving NO button */
 const noBtn=document.getElementById("noBtn");
 noBtn.addEventListener("mouseover",()=>{
- noBtn.style.top=Math.random()*80+"%";
- noBtn.style.left=Math.random()*80+"%";
+ noBtn.style.top=Math.random()*70+"%";
+ noBtn.style.left=Math.random()*70+"%";
 });
 </script>
 
