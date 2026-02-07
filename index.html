@@ -16,9 +16,18 @@ body{
     text-align:center;
     overflow:hidden;
 }
-.startScreen{
-    color:white;
+
+/* floating hearts */
+.heart{
+ position:fixed;
+ top:-10px;
+ font-size:22px;
+ animation:fall 6s linear forwards;
 }
+@keyframes fall{to{transform:translateY(110vh);}}
+
+/* start screen */
+.startScreen{ color:white; }
 .startBtn{
     padding:15px 35px;
     font-size:20px;
@@ -28,6 +37,8 @@ body{
     color:white;
     cursor:pointer;
 }
+
+/* card */
 .card{
     display:none;
     background:white;
@@ -39,7 +50,15 @@ body{
 }
 .name{font-weight:bold;font-size:26px;color:#ff2e63;}
 button{margin:15px;padding:12px 25px;border:none;border-radius:25px;font-size:16px;cursor:pointer;}
-.yes{background:#ff4b6e;color:white;}
+.yes{
+ background:#ff4b6e;color:white;
+ animation:pulse 1.5s infinite;
+}
+@keyframes pulse{
+ 0%{transform:scale(1)}
+ 50%{transform:scale(1.1)}
+ 100%{transform:scale(1)}
+}
 .no{background:#eee;position:absolute;}
 .slideshow img{width:100%;height:220px;object-fit:cover;border-radius:15px;}
 </style>
@@ -47,88 +66,72 @@ button{margin:15px;padding:12px 25px;border:none;border-radius:25px;font-size:16
 
 <body>
 
-<audio id="bgMusic" loop>
+<audio id="bgMusic" loop preload="auto">
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
-<!-- START SCREEN -->
 <div class="startScreen" id="startScreen">
   <h1>Tap to open ❤️</h1>
   <button class="startBtn" onclick="startSite()">Start</button>
 </div>
 
-<!-- MAIN CARD -->
 <div class="card" id="mainCard">
+  <div class="slideshow">
+      <img src="photo1.jpg" id="slide">
+  </div>
 
-<div class="slideshow">
-    <img src="photo1.jpg" id="slide">
-</div>
+  <h1 id="typing"></h1>
 
-<h1>Hey <span class="name">Kankona</span> ❤️</h1>
+  <p id="typing2"></p>
 
-<p>
-Every moment with you feels magical ✨<br>
-You are my happiness, my peace, my home 🏡💞<br><br>
-I <b>Satyajit</b> want to stay with you forever 💍
-</p>
+  <h2>Will you be mine forever <span class="name">Kankona</span>? 💖</h2>
 
-<h2>Will you be mine forever <span class="name">Kankona</span>? 💖</h2>
-
-<button class="yes" onclick="yesClick()">Yes 🥰</button>
-<button class="no" id="noBtn">No 😢</button>
-
+  <button class="yes" onclick="yesClick()">Yes 🥰</button>
+  <button class="no" id="noBtn">No 😢</button>
 </div>
 
 <script>
+/* floating hearts background */
+setInterval(()=>{
+ const heart=document.createElement("div");
+ heart.className="heart";
+ heart.innerHTML="💖";
+ heart.style.left=Math.random()*100+"vw";
+ heart.style.fontSize=(20+Math.random()*20)+"px";
+ document.body.appendChild(heart);
+ setTimeout(()=>heart.remove(),6000);
+},400);
+
+/* typing effect */
+function typeWriter(text, id, speed){
+ let i=0;
+ function typing(){
+   if(i<text.length){
+     document.getElementById(id).innerHTML+=text.charAt(i);
+     i++; setTimeout(typing,speed);
+   }
+ }
+ typing();
+}
+
+/* start site */
 function startSite(){
- document.getElementById("bgMusic").play();
+ const music=document.getElementById("bgMusic");
+ music.play();
  document.getElementById("startScreen").style.display="none";
  document.getElementById("mainCard").style.display="block";
+
+ typeWriter("Hey Kankona ❤️","typing",70);
+ typeWriter("Every moment with you feels magical ✨ You are my happiness, my peace, my home 🏡💞 I Satyajit want to stay with you forever 💍","typing2",30);
 }
 
 /* slideshow */
 let images=["photo1.jpg","photo2.jpg"];
 let i=0;
 setInterval(()=>{
-  let slide=document.getElementById("slide");
-  if(slide){
-    i=(i+1)%images.length;
-    slide.src=images[i];
-  }
+ let slide=document.getElementById("slide");
+ if(slide){ i=(i+1)%images.length; slide.src=images[i]; }
 },2500);
-
-/* YES SCREEN */
-function yesClick(){
- document.body.innerHTML=`
- <style>
- body{
-  background:linear-gradient(135deg,#ff4b6e,#ff9a9e);
-  display:flex;justify-content:center;align-items:center;height:100vh;margin:0;
-  font-family:'Times New Roman',serif;color:white;text-align:center;
- }
- .loveBox{
-  border:6px solid #fff;border-radius:30px;padding:40px;max-width:650px;
-  box-shadow:0 0 40px rgba(255,255,255,0.5);position:relative;
- }
- .loveBox:before,.loveBox:after{
-  content:"❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️ ❤️";
-  position:absolute;font-size:22px;width:100%;left:0;
- }
- .loveBox:before{top:-35px;} .loveBox:after{bottom:-35px;}
- .bigText{font-weight:bold;font-size:22px;line-height:1.7;}
- </style>
-
- <div class="loveBox">
- <h1>Kankona ❤️ Satyajit Forever 💍</h1>
- <p class="bigText">
- I promise to always choose you, every single day.<br><br>
- I promise to stand beside you in your bad days and celebrate your good days like they are my own.<br><br>
- I promise to respect you, support your dreams, and never stop making you smile.<br><br>
- No matter what life brings, I’ll hold your hand and walk through everything with you.<br><br>
- I LOVE YOU KANKONA ❤️
- </p>
- </div>`;
-}
 
 /* moving NO button */
 setTimeout(()=>{
@@ -140,6 +143,46 @@ setTimeout(()=>{
   });
  }
 },500);
+
+/* confetti */
+function confetti(){
+ for(let i=0;i<80;i++){
+   const c=document.createElement("div");
+   c.innerHTML="🎉";
+   c.style.position="fixed";
+   c.style.left=Math.random()*100+"vw";
+   c.style.top="-10px";
+   c.style.fontSize="20px";
+   c.style.animation="fall 4s linear forwards";
+   document.body.appendChild(c);
+   setTimeout(()=>c.remove(),4000);
+ }
+}
+
+/* YES click */
+function yesClick(){
+ confetti();
+ document.getElementById("mainCard").style.display="none";
+
+ const finalScreen=document.createElement("div");
+ finalScreen.innerHTML=`
+ <style>
+ body{background:linear-gradient(135deg,#ff4b6e,#ff9a9e);}
+ .loveWrapper{display:flex;justify-content:center;align-items:center;height:100vh;font-family:'Times New Roman',serif;color:white;}
+ .loveBox{border:6px solid #fff;border-radius:30px;padding:40px;max-width:650px;box-shadow:0 0 40px rgba(255,255,255,0.5);}
+ .bigText{font-weight:bold;font-size:22px;line-height:1.7;}
+ </style>
+
+ <div class="loveWrapper">
+  <div class="loveBox">
+   <h1>Kankona ❤️ Satyajit Forever 💍</h1>
+   <p class="bigText">
+   I promise to always choose you every day ❤️
+   </p>
+  </div>
+ </div>`;
+ document.body.appendChild(finalScreen);
+}
 </script>
 
 </body>
